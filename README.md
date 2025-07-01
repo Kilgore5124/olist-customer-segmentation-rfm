@@ -71,4 +71,18 @@ All analysis was performed in **Google Colab** using:
 1. Run the notebook in [Google Colab](https://colab.research.google.com/)
 2. View `rfm_segmented_data.csv` for ready-to-use Tableau input
 
+---
+
+## SQL Query Download
+
+The full SQL logic used to prepare the customer-level RFM dataset is available below:
+📄 Download: 
+
+This query:
+•	Filters for delivered orders
+•	Joins payment and order data
+•	Calculates Recency, Frequency, and Monetary values per customer
+•	Outputs a clean table ready for segmentation in Python
+
+The query was run using Google BigQuery and served as the foundation for the RFM analysis.
 
