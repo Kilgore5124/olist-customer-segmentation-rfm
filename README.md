@@ -1,12 +1,12 @@
 # Customer Segmentation for a Brazilian E-Commerce Company Using RFM Analysis
 
-## 📊 Project Overview
+## Project Overview
 
 This project uses **RFM (Recency, Frequency, Monetary)** analysis to segment customers of **Olist**, a Brazilian e-commerce platform, based on their purchasing behavior. The goal is to identify high-value customer groups to support targeted marketing strategies and improve customer retention and ROI.
 
 ---
 
-## 🧠 Business Objective
+## Business Objective
 
 Olist wants to better understand its customer base in order to:
 - Reward its most valuable customers
@@ -15,7 +15,7 @@ Olist wants to better understand its customer base in order to:
 
 ---
 
-## 📁 Dataset
+## Dataset
 
 The analysis uses three tables from the Olist public dataset:
 - `orders`: order metadata with purchase timestamps
@@ -26,7 +26,7 @@ The final dataset includes customer-level **recency**, **frequency**, and **mone
 
 ---
 
-## 🧮 Methods
+## Methods
 
 - RFM scoring using **quintiles** to assign 1–5 scores
 - Customer segmentation based on RFM score patterns
@@ -40,7 +40,7 @@ All analysis was performed in **Google Colab** using:
 
 ---
 
-## 📌 Key Segments
+## Key Segments
 
 | Segment        | Description                                 |
 |----------------|---------------------------------------------|
@@ -51,13 +51,13 @@ All analysis was performed in **Google Colab** using:
 
 ---
 
-## 📈 Tableau Dashboard
+## Tableau Dashboard
 
 [🔗 Link to Tableau Dashboard Here](#) *(Replace this with your public link once published)*
 
 ---
 
-## 💡 Recommendations
+## Recommendations
 
 - **Champions**: Offer loyalty perks and exclusive access
 - **At Risk**: Send reactivation campaigns and discounts
@@ -66,7 +66,7 @@ All analysis was performed in **Google Colab** using:
 
 ---
 
-## 🚀 How to Use
+## How to Use
 
 1. Run the notebook in [Google Colab](https://colab.research.google.com/)
 2. View `rfm_segmented_data.csv` for ready-to-use Tableau input
