@@ -76,7 +76,52 @@ All analysis was performed in **Google Colab** using:
 ## SQL Query Download
 
 The full SQL logic used to prepare the customer-level RFM dataset is available below:
-📄 Download: 
+
+-- Step 1: Filter delivered orders and join with payments
+WITH delivered_orders AS (
+  SELECT
+    o.customer_id,
+    o.order_id,
+    CAST(o.order_purchase_timestamp AS DATE) AS order_date,  -- Convert timestamp to date
+    op.payment_value
+  FROM
+    `second-analysis.olist.orders` o
+  JOIN
+    `second-analysis.olist.order_payments` op
+  ON
+    o.order_id = op.order_id
+  WHERE
+    o.order_status = 'delivered'  -- Only consider delivered orders
+),
+
+-- Step 2: Find the most recent purchase date in the dataset
+max_order_date AS (
+  SELECT
+    MAX(order_date) AS max_date
+  FROM
+    delivered_orders
+),
+
+-- Step 3: Aggregate data at customer level to calculate Recency, Frequency, and Monetary
+customer_rfm AS (
+  SELECT
+    do.customer_id,
+    DATE_DIFF(mo.max_date, MAX(do.order_date), DAY) AS recency_days,  -- Days since last purchase
+    COUNT(DISTINCT do.order_id) AS frequency,                        -- Number of orders
+    SUM(do.payment_value) AS monetary                                -- Total amount spent
+  FROM
+    delivered_orders do
+  CROSS JOIN
+    max_order_date mo  -- Bring in max purchase date to calculate recency
+  GROUP BY
+    do.customer_id, mo.max_date
+)
+
+-- Final output: list customers with RFM metrics ordered by recency (most recent first)
+SELECT * FROM customer_rfm
+ORDER BY recency_days ASC
+LIMIT 100
+
 
 This query:
 •	Filters for delivered orders
