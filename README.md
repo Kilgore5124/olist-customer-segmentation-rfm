@@ -73,7 +73,7 @@ All analysis was performed in **Google Colab** using:
 
 ---
 
-## SQL Query Download
+## SQL Query
 
 The full SQL logic used to prepare the customer-level RFM dataset is available below:
 
