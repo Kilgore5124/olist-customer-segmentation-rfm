@@ -39,7 +39,7 @@ We filtered for **delivered orders only**, as they represent actual completed tr
 |------------|-----------------------------------|-------------------|
 | Recency    | Days since last purchase          | Lower is better   |
 | Frequency  | Number of delivered orders        | Higher is better  |
-| Monetary   | Total spend     | Higher is better  |
+| Monetary   | Total spend   (payment value)     | Higher is better  |
 
 Each metric is scored from **1 to 5** using quantiles, and combined into a **3-digit `rfm_score`** (e.g. `555`).
 
