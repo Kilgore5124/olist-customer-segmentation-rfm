@@ -67,3 +67,22 @@ The final dataset includes:
 
 ```csv
 customer_id, recency_days, frequency, monetary, r_score, f_score, m_score, rfm_score, segment
+
+## Key Outcomes
+
+- Identified ~9,000 customers with full RFM segmentation  
+- Created clear behavioral segments to inform marketing strategy  
+- Built an automated pipeline from BigQuery → Python → Tableau  
+- Exported a clean, analysis-ready CSV for dashboarding  
+- Demonstrated practical SQL and data analytics skills relevant to business use cases  
+
+---
+
+## How to Reproduce This Project
+
+1. Clone this repository  
+2. Open the notebook `rfm_analysis_olist.ipynb` in Google Colab  
+3. Connect your Google Cloud account with access to BigQuery  
+4. Run all cells to generate the RFM scores and segments  
+5. Export the final CSV file `olist_rfm_segmented_customers.csv`  
+6. Open Tableau and connect the CSV to build the dashboard
