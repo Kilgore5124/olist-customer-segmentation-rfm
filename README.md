@@ -1,133 +1,69 @@
-# Customer Segmentation for a Brazilian E-Commerce Company Using RFM Analysis
+# 📊 Customer Segmentation with RFM Analysis (Brazilian E-Commerce)
 
-## Project Overview
-
-This project uses **RFM (Recency, Frequency, Monetary)** analysis to segment customers of **Olist**, a Brazilian e-commerce platform, based on their purchasing behavior. The goal is to identify high-value customer groups to support targeted marketing strategies and improve customer retention and ROI.
+This project uses real-world transactional data from a Brazilian e-commerce company (Olist) to perform **RFM-based customer segmentation**, helping identify high-value customer groups and optimize marketing strategies.
 
 ---
 
-## Business Objective
+## 🎯 Business Objective
 
-Olist wants to better understand its customer base in order to:
-- Reward its most valuable customers
-- Re-engage at-risk or inactive segments
-- Tailor marketing efforts to behavior-based personas
+Customer acquisition is costly — so retaining and nurturing existing customers is crucial. This project answers:
 
----
+> **"Which types of customers should the business focus on to increase retention, loyalty, and ROI?"**
 
-## Dataset
-
-The analysis uses three tables from the Olist public dataset:
-- `orders`: order metadata with purchase timestamps
-- `customers`: unique customer IDs
-- `order_payments`: total payment value per order
-
-The final dataset includes customer-level **recency**, **frequency**, and **monetary** metrics.
+We use **Recency, Frequency, and Monetary (RFM) analysis** to segment customers based on behavior and value, providing actionable insights for marketing and lifecycle management.
 
 ---
 
-## Methods
+## 🛠 Tools & Technologies
 
-- RFM scoring using **quintiles** to assign 1–5 scores
-- Customer segmentation based on RFM score patterns
-- Group-level analysis of average metrics by segment
-- Exported clean dataset for Tableau dashboarding
-
-All analysis was performed in **Google Colab** using:
-- Python (Pandas, Matplotlib)
-- Google BigQuery (for initial SQL queries)
-- Gemini (for automation and documentation)
+- **Google BigQuery** – to query raw order and payment data  
+- **Google Colab** (Python, Pandas) – for data transformation and RFM scoring  
+- **Tableau** – for interactive dashboards  
+- **GitHub** – for version control and portfolio presentation  
 
 ---
 
-## Key Segments
+## 📦 Dataset
 
-| Segment        | Description                                 |
-|----------------|---------------------------------------------|
-| Champions      | Recent, frequent, high-spending customers   |
-| Loyal          | Buy frequently but may spend less per order |
-| At Risk        | Haven’t purchased in a while                |
-| Hibernating    | Inactive and low-spending customers         |
+We used the public [Olist Brazilian E-Commerce dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) containing:  
+- Customer orders (timestamps, status)  
+- Payments (total value per order)  
 
----
-
-## Tableau Dashboard
-
-[🔗 Link to Tableau Dashboard Here](#) *(Replace this with your public link once published)*
+We filtered for **delivered orders only**, as they represent actual completed transactions.
 
 ---
 
-## Recommendations
+## 🧮 RFM Analysis Process
 
-- **Champions**: Offer loyalty perks and exclusive access
-- **At Risk**: Send reactivation campaigns and discounts
-- **Loyal**: Encourage upsells or referrals
-- **Hibernating**: Analyze acquisition cost vs. reactivation ROI
+| Metric     | Description                       | Scoring           |
+|------------|-----------------------------------|-------------------|
+| Recency    | Days since last purchase          | Lower is better   |
+| Frequency  | Number of delivered orders        | Higher is better  |
+| Monetary   | Total spend (`payment_value`)     | Higher is better  |
 
----
-
-## How to Use
-
-1. Run the notebook in [Google Colab](https://colab.research.google.com/)
-2. View `rfm_segmented_data.csv` for ready-to-use Tableau input
+Each metric is scored from **1 to 5** using quantiles, and combined into a **3-digit `rfm_score`** (e.g. `555`).
 
 ---
 
-## SQL Query
+## 🏷 Customer Segments
 
-The full SQL logic used to prepare the customer-level RFM dataset is available below:
+Customers were assigned to segments using RFM score logic:
 
--- Step 1: Filter delivered orders and join with payments
-WITH delivered_orders AS (
-  SELECT
-    o.customer_id,
-    o.order_id,
-    CAST(o.order_purchase_timestamp AS DATE) AS order_date,  -- Convert timestamp to date
-    op.payment_value
-  FROM
-    `second-analysis.olist.orders` o
-  JOIN
-    `second-analysis.olist.order_payments` op
-  ON
-    o.order_id = op.order_id
-  WHERE
-    o.order_status = 'delivered'  -- Only consider delivered orders
-),
+| Segment               | Criteria                        |
+|-----------------------|---------------------------------|
+| Champion              | R = 5, F = 5, M = 5             |
+| Loyal Customer        | R ≥ 4 and F ≥ 4                 |
+| Potential Loyalist    | R ≥ 3 and F ≥ 4                 |
+| New Customer          | R = 5 and F ≤ 2                 |
+| At Risk               | R ≤ 2 and F ≥ 4                 |
+| Lost                  | R = 1 and F = 1                 |
+| Other                 | Default fallback segment        |
 
--- Step 2: Find the most recent purchase date in the dataset
-max_order_date AS (
-  SELECT
-    MAX(order_date) AS max_date
-  FROM
-    delivered_orders
-),
+---
 
--- Step 3: Aggregate data at customer level to calculate Recency, Frequency, and Monetary
-customer_rfm AS (
-  SELECT
-    do.customer_id,
-    DATE_DIFF(mo.max_date, MAX(do.order_date), DAY) AS recency_days,  -- Days since last purchase
-    COUNT(DISTINCT do.order_id) AS frequency,                        -- Number of orders
-    SUM(do.payment_value) AS monetary                                -- Total amount spent
-  FROM
-    delivered_orders do
-  CROSS JOIN
-    max_order_date mo  -- Bring in max purchase date to calculate recency
-  GROUP BY
-    do.customer_id, mo.max_date
-)
+## 📤 Final Output
 
--- Final output: list customers with RFM metrics ordered by recency (most recent first)
-SELECT * FROM customer_rfm
-ORDER BY recency_days ASC
-LIMIT 100
+The final dataset includes:
 
-
-This query:
-•	Filters for delivered orders
-•	Joins payment and order data
-•	Calculates Recency, Frequency, and Monetary values per customer
-•	Outputs a clean table ready for segmentation in Python
-
-The query was run using Google BigQuery and served as the foundation for the RFM analysis.
-
+```csv
+customer_id, recency_days, frequency, monetary, r_score, f_score, m_score, rfm_score, segment
