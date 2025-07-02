@@ -61,7 +61,7 @@ Customers were assigned to segments using RFM score logic:
 
 ---
 
-## 📤 Final Output
+## Final Output
 
 The final dataset includes:
 
